@@ -1,49 +1,66 @@
-String greet(String name) {
-  return 'Привет, $name!';
-}
-
-String greetArrow(String name) => 'Привет, $name!';
-
-int square(int x) => x * x;
-
-double half(double x) => x / 2;
-
-void describePet({required String name, String species = 'kot', int age = 0}) {
-  print('$name - $species, возраст $age');
-}
-
-String repeat(String text, [int times = 2]) {
-  String result = '';
-  for (int i = 0; i < times; i++) {
-    result += text;
+double average(List<int> grades) {
+  if (grades.isEmpty) return 0;
+  int sum = 0;
+  for (var grade in grades) {
+    sum += grade;
   }
-  return result;
+  return sum / grades.length;
+}
+
+int maxGrade(List<int> grades) {
+  int max = grades[0];
+  for (var grade in grades) {
+    if (grade > max) max = grade;
+  }
+  return max;
+}
+
+int minGrade(List<int> grades) {
+  int min = grades[0];
+  for (var grade in grades) {
+    if (grade < min) min = grade;
+  }
+  return min;
+}
+
+String letterGrade(double avg) {
+  if (avg >= 4.5) return 'Отлично';
+  if (avg >= 3.5) return 'Хорошо';
+  if (avg >= 2.5) return 'Удовлетворительно';
+  return 'Неудовлетворительно';
+}
+
+void printStats({required String name, required List<int> grades}) {
+  double avg = average(grades);
+  print(' $name');
+  print('Оценки: $grades');
+  print('Среднее: ${avg.toStringAsFixed(2)}');
+  print('Макс: ${maxGrade(grades)}, Мин: ${minGrade(grades)}');
+  print('Итог: ${letterGrade(avg)}');
+  print('');
 }
 
 void main() {
-  print(greet('Артём'));
-  print(greet('Мария'));
+  Map<String, List<int>> students = {
+    'Артём Иванов': [5, 4, 5, 3, 4, 5],
+    'Мария Петрова': [4, 4, 5, 5, 4, 5],
+    'Иван Сидоров': [3, 3, 4, 2, 3, 4],
+  };
 
-  print(greetArrow('Артём'));
-  print(square(5));
-  print(half(10));
+  print('Анализатор оценок');
+  print('');
 
-  describePet(name: 'Барсик', age: 3);
-  describePet(name: 'Шарик', species: 'пёс');
-  describePet(name: 'Мурка');
+  students.forEach((name, grades) {
+    printStats(name: name, grades: grades);
+  });
 
-  print(repeat('xa'));
-  print(repeat('xa', 3));
+  print('Общая статистика');
+  int totalStudents = students.length;
+  print('Всего студентов: $totalStudents');
 
-  List<int> numbers = [3, 1, 4, 1, 5, 9];
-  numbers.sort((a, b) => b - a);
-  print(numbers);
-
-  List<String> names = ['Артём', 'Мария', 'Иван'];
-
-  List<String> upper = names.map((name) => name.toUpperCase()).toList();
-  print(upper);
-
-  List<String> longNames = names.where((name) => name.length > 4).toList();
-  print(longNames);
+  int excellentCount = 0;
+  students.forEach((name, grades) {
+    if (average(grades) >= 4.5) excellentCount++;
+  });
+  print('Отличников: $excellentCount из $totalStudents');
 }
